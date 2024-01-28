@@ -113,7 +113,7 @@ fn play_normal() {
             .expect(GUIDE);
         let turn = match (movetype, coords) {
             ("f", n) => MoveType::Flag(n.0, n.1),
-            ("d", n) => MoveType::Sweep(n.0, n.1),
+            ("d", n) => MoveType::Dig(n.0, n.1),
             other => panic!("invalid input: {:?}", other),
         };
         ms.play_turn(turn);

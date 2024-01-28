@@ -6,6 +6,17 @@ use crate::BOARD_WIDTH;
 use crate::MINE_COUNT;
 use rand::*;
 
+pub const ADJACENTS: [(i32, i32); 8] = [
+    (1, 0),
+    (1, 1),
+    (0, 1),
+    (-1, 1),
+    (-1, 0),
+    (-1, -1),
+    (0, -1),
+    (1, -1),
+];
+
 #[derive(Debug)]
 pub struct Minesweeper {
     pub board: [[Tile; BOARD_WIDTH]; BOARD_HEIGHT],
@@ -64,7 +75,7 @@ impl Minesweeper {
         }
 
         let mut ms = Self { board, mines };
-        ms.play_turn(MoveType::Sweep(guess.0, guess.1));
+        ms.play_turn(MoveType::Dig(guess.0, guess.1));
         ms
     }
 
@@ -118,12 +129,13 @@ impl Minesweeper {
                     self.board[y][x] = T::Unknown(!val);
                 }
             }
-            M::Sweep(y, x) => {
+            M::Dig(y, x) => {
                 if !self.mines.contains(&(y, x)) {
                     if let T::Unknown(false) = self.board[y][x] {
                         self.flood_fill((y, x));
                     }
                 } else {
+                    eprintln!("tried to dig at {:?}, but there was a mine!", (y, x));
                     panic!("you lost!! idk how to restart the game yet!");
                 }
 
@@ -147,17 +159,7 @@ impl Minesweeper {
 
     fn adjacent_mines(mines: Vec<(usize, usize)>, coords: (usize, usize)) -> u8 {
         let mut count = 0;
-        let adjacents = [
-            (1, 0),
-            (1, 1),
-            (0, 1),
-            (-1, 1),
-            (-1, 0),
-            (-1, -1),
-            (0, -1),
-            (1, -1),
-        ];
-        for adj in adjacents {
+        for adj in ADJACENTS {
             let pos = (coords.0 as i32 + adj.0, coords.1 as i32 + adj.1);
             if mines.contains(&(pos.0 as usize, pos.1 as usize)) {
                 count += 1;
@@ -197,5 +199,5 @@ pub enum Tile {
 #[derive(Clone, Copy, Debug)]
 pub enum MoveType {
     Flag(usize, usize),
-    Sweep(usize, usize),
+    Dig(usize, usize),
 }
