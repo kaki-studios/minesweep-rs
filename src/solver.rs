@@ -43,9 +43,7 @@ pub fn play(ms: &Minesweeper) -> MoveType {
     //flag those tiles
     for tile in &number_tiles {
         let curr_tile = ms.board[tile.0][tile.1];
-        dbg!(&curr_tile);
         let adjacent_tiles = get_adjacent_tiles(ms, *tile);
-        dbg!(&adjacent_tiles.iter().flatten().count());
         let adjacent_unknowns: Vec<(usize, usize)> = adjacent_tiles
             .iter()
             .flatten()
