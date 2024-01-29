@@ -138,22 +138,21 @@ impl Minesweeper {
                     eprintln!("tried to dig at {:?}, but there was a mine!", (y, x));
                     panic!("you lost!! idk how to restart the game yet!");
                 }
-
-                let unknowns = self
-                    .board
-                    .iter()
-                    .flatten()
-                    .filter(|x| if let T::Unknown(_) = x { true } else { false })
-                    .map(|x| *x)
-                    .collect::<Vec<Tile>>();
-                //if all mines are flagged and there are no unflagged
-                //this isn't an elegant way to do it
-                if unknowns.len() == MINE_COUNT && !unknowns.contains(&T::Unknown(false)) {
-                    println!("you won the game!!");
-                    println!("idk how to restart so i\'ll just exit");
-                    exit(0);
-                }
             }
+        }
+        let unknowns = self
+            .board
+            .iter()
+            .flatten()
+            .filter(|x| if let T::Unknown(_) = x { true } else { false })
+            .map(|x| *x)
+            .collect::<Vec<Tile>>();
+        //if all mines are flagged and there are no unflagged
+        //FIXME: this isn't an elegant way to do it
+        if unknowns.len() == MINE_COUNT && !unknowns.contains(&T::Unknown(false)) {
+            println!("you won the game!!");
+            println!("idk how to restart so i\'ll just exit");
+            exit(0);
         }
     }
 

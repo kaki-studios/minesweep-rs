@@ -69,15 +69,29 @@ pub fn play(ms: &Minesweeper) -> MoveType {
         }
     }
     //nothing to do, most probably a situation where you have to guess, so we'll guess
-    guess()
+    guess(ms)
 }
 
-fn guess() -> MoveType {
+fn guess(ms: &Minesweeper) -> MoveType {
+    let mut unknowns = vec![];
+    for (y, row) in ms.board.iter().enumerate() {
+        for (x, tile) in row.iter().enumerate() {
+            if let Tile::Unknown(false) = tile {
+                unknowns.push((y, x));
+            }
+        }
+    }
     let mut rng = rand::thread_rng();
-    MoveType::Dig(
-        rng.gen_range(0..BOARD_HEIGHT),
-        rng.gen_range(0..BOARD_WIDTH),
-    )
+
+    let tile = if unknowns.len() > 0 {
+        unknowns[rng.gen_range(0..unknowns.len())]
+    } else {
+        (
+            rng.gen_range(0..BOARD_HEIGHT),
+            rng.gen_range(0..BOARD_WIDTH),
+        )
+    };
+    MoveType::Dig(tile.0, tile.1)
 }
 
 fn get_adjacent_tiles(

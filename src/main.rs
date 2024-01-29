@@ -122,11 +122,11 @@ fn play_normal() {
 
 fn play_bot() {
     print_empty_board();
-    println!("type `n` to see next turn, anything else to exit");
+    println!("type q to exit, <Enter> to see next turn");
     let mut buffer = String::new();
     stdin().lock().read_line(&mut buffer).unwrap();
 
-    if buffer.trim() != "n" {
+    if buffer.trim() == "q" {
         return;
     }
     let mut rng = rand::thread_rng();
@@ -140,9 +140,9 @@ fn play_bot() {
     loop {
         ms.print_board();
         buffer.clear();
-        println!("type `n` to see next turn, anything else to exit");
+        println!("type q to exit, <Enter> to see next turn");
         stdin().lock().read_line(&mut buffer).unwrap();
-        if buffer.trim() != "n" {
+        if buffer.trim() == "q" {
             break;
         }
         ms.play_turn(crate::solver::play(&ms));
