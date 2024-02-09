@@ -150,6 +150,7 @@ impl Minesweeper {
         //if all mines are flagged and there are no unflagged
         //FIXME: this isn't an elegant way to do it
         if unknowns.len() == MINE_COUNT && !unknowns.contains(&T::Unknown(false)) {
+            self.print_board();
             println!("you won the game!!");
             println!("idk how to restart so i\'ll just exit");
             exit(0);
